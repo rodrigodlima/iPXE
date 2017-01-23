@@ -1,0 +1,5 @@
+#!ipxe
+dhcp net0
+kernel -n img http://mirror.nbtelecom.com.br/centos/7/os/x86_64/isolinux/vmlinuz ks=http://54.202.246.18/ks.cfg
+initrd http://mirror.nbtelecom.com.br/centos/7/os/x86_64/isolinux/initrd.img
+boot img
