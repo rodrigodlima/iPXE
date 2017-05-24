@@ -1,0 +1,35 @@
+#!ipxe
+
+set farch x86_64
+set centos_root http://mirror.globo.com/centos/
+set userdata http://54.190.195.60/ks.cfg
+dhcp
+#set net4/ip 179.191.171.13
+#set net4/netmask 255.255.255.192
+#set net4/gateway 179.191.171.1
+
+# Kickstart CentOS Installation Menu
+menu --name centos_ks Kickstart CentOS Installation
+item --menu centos_ks --gap Select CentOS Version to Kickstart
+item --menu centos_ks --default centos7_ks CentOS v7
+item --menu centos_ks main Return
+
+# Main Menu
+menu --name main Rodrigo Bootstaller
+item --menu main
+item --menu main --gap Automatic Installations
+item --menu main centos_ks CentOS Kickstart
+
+# Start
+:main
+choose --menu main --keep distro || shell
+choose --menu ${distro} --keep target
+goto ${target}
+
+:centos7_ks
+set kickstart ks=${userdata}
+set version 7
+
+:centos_boot
+initrd ${centos_root}/${version}/os/${farch}/images/pxeboot/initrd.img
+boot ${centos_root}/${version}/os/${farch}/images/pxeboot/vmlinuz ${bo}=${centos_root}/${version}/os/${farch}/ ${kickstart}
